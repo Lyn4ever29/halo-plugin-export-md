@@ -9,15 +9,15 @@ export default definePlugin({
     {
       parentName: "Root",
       route: {
-        path: "/example",
-        name: "Example",
+        path: "/export2doc",
+        name: "export2doc",
         component: HomeView,
         meta: {
-          title: "示例页面",
+          title: "导出文章",
           searchable: true,
           menu: {
-            name: "示例页面",
-            group: "示例分组",
+            name: "导出文章",
+            group: "工具",
             icon: markRaw(IconPlug),
             priority: 0,
           },
@@ -27,3 +27,4 @@ export default definePlugin({
   ],
   extensionPoints: {},
 });
+

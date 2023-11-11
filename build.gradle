@@ -5,7 +5,7 @@ plugins {
     id "run.halo.plugin.devtools" version "0.0.7"
 }
 
-group 'run.halo.starter'
+group 'cn.lyn4ever.export2doc'
 sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -20,11 +20,19 @@ dependencies {
     compileOnly 'run.halo.app:api'
 
     testImplementation 'run.halo.app:api'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
+
+    implementation 'cn.hutool:hutool-all:5.8.16'
+
 }
 
 test {
     useJUnitPlatform()
+    //  设置编码为utf8
+    systemProperty("file.encoding", "UTF-8")
+}
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
 
 node {

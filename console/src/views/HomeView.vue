@@ -1,82 +1,75 @@
 <script setup lang="ts">
 import confetti from "canvas-confetti";
-import { onMounted } from "vue";
-import RiShareCircleLine from "~icons/ri/share-circle-line";
-import RiCodeBoxLine from "~icons/ri/code-box-line";
-import RiBookReadLine from "~icons/ri/book-read-line";
-import RiComputerLine from "~icons/ri/computer-line";
-import RiArrowRightSLine from "~icons/ri/arrow-right-s-line";
+import {onMounted, ref} from "vue";
+import CarbonPackage from '~icons/carbon/package'
+import AntDesignInfoCircleOutlined from '~icons/ant-design/info-circle-outlined'
+import AboutMe from "@/components/AboutMe.vue";
+import ExportArtical from "@/components/ExportArticalV1.vue";
 
 onMounted(() => {
   confetti({
     particleCount: 100,
     spread: 70,
-    origin: { y: 0.6, x: 0.58 },
+    origin: {y: 0.6, x: 0.58},
   });
 });
+
+const activeIndex = ref('1')
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+  activeIndex.value = keyPath[0]
+  console.log(activeIndex.value);
+}
 </script>
 
 <template>
-  <section id="plugin-starter">
-    <div class="wrapper">
-      <span class="title"> 你已经成功运行起了插件！ </span>
-      <span class="message">你可以点击下方文档继续下一步</span>
-      <div class="docs">
-        <a
-          href="https://docs.halo.run/developer-guide/plugin/publish"
-          class="docs__box"
-          target="_blank"
+  <div class="common-layout" id="plugin-export-anything">
+    <el-container>
+      <el-header>
+        <el-menu
+            :default-active="activeIndex"
+            class="el-menu-demo"
+            mode="horizontal"
+            @select="handleSelect"
         >
-          <h2 class="docs__box-title"><RiShareCircleLine />发布一个插件</h2>
-          <span class="docs__box-message">
-            了解如何与我们的社区分享您的扩展。
-          </span>
-          <span class="docs__box-arrow">
-            <RiArrowRightSLine />
-          </span>
-        </a>
-        <a
-          href="https://docs.halo.run/developer-guide/plugin/structure"
-          class="docs__box"
-          target="_blank"
-        >
-          <h2 class="docs__box-title"><RiComputerLine />基础概览</h2>
-          <span class="docs__box-message">
-            了解插件的项目结构、生命周期、资源配置等。
-          </span>
-          <span class="docs__box-arrow">
-            <RiArrowRightSLine />
-          </span>
-        </a>
-        <a
-          href="https://docs.halo.run/developer-guide/plugin/examples/todolist"
-          class="docs__box group"
-          target="_blank"
-        >
-          <h2 class="docs__box-title"><RiBookReadLine />示例插件</h2>
-          <span class="docs__box-message">帮助你从 0 到 1 完成一个插件。</span>
-          <span class="docs__box-arrow">
-            <RiArrowRightSLine />
-          </span>
-        </a>
-        <a
-          href="https://docs.halo.run/developer-guide/plugin/api-reference/extension"
-          class="docs__box"
-          target="_blank"
-        >
-          <h2 class="docs__box-title"><RiCodeBoxLine />API 参考</h2>
-          <span class="docs__box-message">插件中的 API 列表。</span>
-          <span class="docs__box-arrow">
-            <RiArrowRightSLine />
-          </span>
-        </a>
-      </div>
-    </div>
-  </section>
+          <el-menu-item index="1" >
+            <CarbonPackage/>
+            <span>导出文章</span>
+          </el-menu-item>
+          <!--          <el-menu-item index="2">-->
+          <!--            <MdiCalendarImportOutline/>-->
+          <!--            <span>导入文档</span>-->
+          <!--          </el-menu-item>-->
+          <el-menu-item index="4" >
+            <AntDesignInfoCircleOutlined/>
+            <span>关于</span>
+          </el-menu-item>
+          <!--          <el-menu-item index="5">-->
+          <!--            <MaterialSymbolsTipsAndUpdatesOutline/>-->
+          <!--            <span>更新日志</span>-->
+          <!--          </el-menu-item>-->
+        </el-menu>
+      </el-header>
+      <el-main>
+        <!--主内容-->
+
+        <!--文档导出-->
+        <ExportArtical v-if="activeIndex==1"/>
+
+        <!--文档导出-->
+        <AboutMe v-if="activeIndex==4"/>
+
+
+      </el-main>
+      <!--      <el-footer>Footer</el-footer>-->
+    </el-container>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-#plugin-starter {
+@import 'element-plus/dist/index.css';
+
+#plugin-export-anything {
   height: 100vh;
   background-color: #f8fafc;
 }
@@ -115,8 +108,7 @@ onMounted(() => {
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       transition-duration: 300ms;
       cursor: pointer;
-      filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1))
-        drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+      filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
 
       &:hover {
         box-shadow: 0 0 0 0px #fff, 0 0 0 1px rgb(59 130 246 / 0.5), 0 0 #0000;
@@ -153,8 +145,7 @@ onMounted(() => {
       &:hover {
         .docs__box-arrow {
           color: #9ca3af;
-          transform: translate(00.375rem, 0) rotate(0) skewX(0) skewY(0)
-            scaleX(1) scaleY(1);
+          transform: translate(00.375rem, 0) rotate(0) skewX(0) skewY(0) scaleX(1) scaleY(1);
         }
       }
     }

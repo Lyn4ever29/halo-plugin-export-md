@@ -1,21 +1,33 @@
-import { fileURLToPath, URL } from "url";
+import {fileURLToPath, URL} from "url";
 
-import { defineConfig } from "vite";
+import {defineConfig} from "vite";
 import Vue from "@vitejs/plugin-vue";
 import VueJsx from "@vitejs/plugin-vue-jsx";
 import Icons from "unplugin-icons/vite";
 
-const pluginEntryName = "PluginStarter";
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+
+import 'dayjs/locale/zh-cn'
+
+const pluginEntryName = "export2doc";
 
 // https://vitejs.dev/config/
-export default ({ mode }: { mode: string }) => {
+export default ({mode}: { mode: string }) => {
   const isProduction = mode === "production";
   const outDir = isProduction
     ? "../src/main/resources/console"
     : "../build/resources/main/console";
 
   return defineConfig({
-    plugins: [Vue(), VueJsx(), Icons({ compiler: "vue3" })],
+    plugins: [Vue(), VueJsx(), Icons({compiler: "vue3",}),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()]
+      }),],
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
