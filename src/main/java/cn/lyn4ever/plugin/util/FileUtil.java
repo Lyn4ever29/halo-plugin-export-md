@@ -19,16 +19,12 @@ public class FileUtil {
      * @param name
      * @return
      */
-    public static boolean isFileNameValid(String name) {
+    public static boolean isCorrectName(String name) {
         if (name == null || name.length() > 255) {
             return false;
         }
-        String[] names = name.split("\\.");
-        if (names.length != 2) {
-            return false;
-        }
         //不能包含 /\:*?"<>|
-        return !FileNameUtil.containsInvalid(names[0]);
+        return !FileNameUtil.containsInvalid(name);
     }
 
 

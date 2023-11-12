@@ -135,13 +135,15 @@ public class ExportService {
         String extendName = extendNameMap.get(StringUtils.lowerCase(content.getRawType()));
 
         //判断文件名是否合法
-        String mdFileName = dir.getAbsoluteFile() + "/" + post.getSpec().getTitle() + extendName;
-        if (!FileUtil.isFileNameValid(mdFileName)) {
-            mdFileName = dir.getAbsolutePath() + "/" + post.getSpec().getSlug() + extendName;
+        String fileName = post.getSpec().getTitle();
+        if (!FileUtil.isCorrectName(fileName)) {
+            fileName =post.getSpec().getSlug();
         }
+        String finalFileName = dir.getAbsoluteFile() + "/" + fileName + extendName;
+
 
         try {
-            File file = new File(mdFileName);
+            File file = new File(finalFileName);
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             //markdown文件的属性
             //todo 先关闭写属性操作

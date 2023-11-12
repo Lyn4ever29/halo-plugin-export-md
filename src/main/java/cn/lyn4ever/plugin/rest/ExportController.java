@@ -71,9 +71,9 @@ public class ExportController {
 
 
     @PostMapping("/del")
-    public Mono<Void> delete(@RequestBody String names) {
+    public Mono<Void> delete(@RequestBody String[] names) {
 
-        Arrays.stream(names.split(",")).parallel().forEach(name ->
+        Arrays.stream(names).parallel().forEach(name ->
                 reactiveClient.fetch(ExportLogSchema.class, name)
                         .publishOn(Schedulers.boundedElastic())
                         .doOnSuccess(exportLogSchema -> {

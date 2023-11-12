@@ -94,7 +94,8 @@ const clickDel = () => {
     confirmText: "确定",
     cancelText: "取消",
     async onConfirm() {
-      http.post("/apis/api.plugin.halo.run/v1alpha1/plugins/export2doc/doExport/del", selectItem.value)
+      http.post("/apis/api.plugin.halo.run/v1alpha1/plugins/export2doc/doExport/del", 
+          selectItem.value)
           .then((res: any) => {
             Toast.success("删除成功");
             init()

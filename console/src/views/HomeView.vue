@@ -49,7 +49,7 @@ const activeTab =  useRouteQuery<string>("tab", tabs.value[0].id);
 
 <template>
 
-  <VPageHeader title="文章导入导出">
+  <VPageHeader title="文章导出">
     <template #icon>
       <IconSettings class="mr-2 self-center" />
     </template>
