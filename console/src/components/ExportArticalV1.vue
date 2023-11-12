@@ -79,7 +79,10 @@ onMounted(init);
 const selectItem = ref('')
 const tableSelect = (selection: any) => {
   console.log(selection)
-  selectItem.value = selection
+  let res = selection.map((obj: { name: any; })=>{
+    return obj.name
+  })
+  selectItem.value = res
 }
 
 
@@ -91,7 +94,7 @@ const clickDel = () => {
     confirmText: "确定",
     cancelText: "取消",
     async onConfirm() {
-      http.post("/apis/api.plugin.halo.run/v1alpha1/plugins/export2doc/doExport/del", selectItem)
+      http.post("/apis/api.plugin.halo.run/v1alpha1/plugins/export2doc/doExport/del", selectItem.value)
           .then((res: any) => {
             Toast.success("删除成功");
             init()
@@ -119,7 +122,7 @@ const formatDate = (s: string | number | Date) => {
       </template>
       导出
     </VButton>
-    <VButton  v-if="selectItem.length>0" type="danger" @click="clickDel">
+    <VButton  v-if="selectItem.length>0" type="danger" @click="clickDel" style="margin-left:10px">
       <template #icon>
         <IconDeleteBin class="h-full w-full"/>
       </template>
@@ -131,7 +134,7 @@ const formatDate = (s: string | number | Date) => {
 
 
     <el-table :data="exportLogData" @selection-change="tableSelect">
-      <!--    <el-table-column type="selection" width="55"/>-->
+          <el-table-column type="selection" width="55"/>
       <el-table-column align="center" type="index" label="序号" width="80"/>
       <el-table-column align="center" property="name" label="名称" width="250" >
         <template #default="scope">

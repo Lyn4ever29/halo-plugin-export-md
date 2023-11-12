@@ -15,6 +15,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.plugin.ApiVersion;
@@ -74,8 +75,13 @@ public class ExportController {
 
         Arrays.stream(names.split(",")).parallel().forEach(name ->
                 reactiveClient.fetch(ExportLogSchema.class, name)
-                        .doOnSuccess(exportLogSchema -> reactiveClient.delete(exportLogSchema)).subscribe());
-
+                        .publishOn(Schedulers.boundedElastic())
+                        .doOnSuccess(exportLogSchema -> {
+                            reactiveClient.delete(exportLogSchema).doOnSuccess(exportLogSchema1 -> {
+                                //删除文件
+                                exportService.delete(name);
+                            }).subscribe();
+                        }).subscribe());
         return Mono.empty();
     }
 

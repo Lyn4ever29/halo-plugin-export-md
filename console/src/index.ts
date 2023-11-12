@@ -13,10 +13,10 @@ export default definePlugin({
         name: "export2doc",
         component: HomeView,
         meta: {
-          title: "文章导入导出",
+          title: "文章导出",
           searchable: true,
           menu: {
-            name: "文章导入导出",
+            name: "文章导出",
             group: "工具",
             icon: markRaw(IconPlug),
             priority: 0,

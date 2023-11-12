@@ -256,6 +256,17 @@ public class ExportService {
         }
     }
 
+    public void delete(String name) {
+
+       String fileName = FileUtil.getDocFile().toFile().getAbsolutePath()+"/"+name;
+
+        //删除文件夹
+        cn.hutool.core.io.FileUtil.del(fileName);
+        //删除压缩文件
+        cn.hutool.core.io.FileUtil.del(fileName+".zip");
+
+
+    }
 }
 
 

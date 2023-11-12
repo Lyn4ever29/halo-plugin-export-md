@@ -13,6 +13,6 @@ spec:
   # 'homepage' usually links to the GitHub repository of the plugin
   homepage: https://jhacker.cn/2023/halo-plugin-export2doc
   # 'displayName' explains what the plugin does in only a few words
-  displayName: "文章导入导出"
-  description: "快速导出文章，支持markdown、html等格式，同时支持导入markdown文件。"
+  displayName: "文章导出"
+  description: "快速导出文章，支持markdown、html等格式。"
 
