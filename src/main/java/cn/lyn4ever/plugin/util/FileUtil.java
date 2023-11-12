@@ -2,6 +2,9 @@ package cn.lyn4ever.plugin.util;
 
 import cn.hutool.core.io.file.FileNameUtil;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @author Lyn4ever29
  * @url https://jhacker.cn
@@ -25,8 +28,20 @@ public class FileUtil {
             return false;
         }
         //不能包含 /\:*?"<>|
-        return FileNameUtil.containsInvalid(names[0]);
+        return !FileNameUtil.containsInvalid(names[0]);
     }
 
 
+    /**
+     * 获取导出文件的路径
+     * @return
+     */
+    public static Path getDocFile() {
+        String userHome = System.getProperty("user.home");
+        Path path = Paths.get(userHome, ".halo").resolve("plugins").resolve("export2doc_files");
+        if (!path.toFile().exists()) {
+            path.toFile().mkdirs();
+        }
+        return path;
+    }
 }

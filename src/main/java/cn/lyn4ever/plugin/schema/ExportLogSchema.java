@@ -47,7 +47,7 @@ public class ExportLogSchema extends AbstractExtension {
      * 状态
      * a-失败
      * b-导出中
-     * c-失败
+     * c-成功
      */
     @Schema
     private String status;

@@ -1,13 +1,22 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-v1.0.0 基础导出功能
-  <el-divider content-position="left">基础共鞥你</el-divider>
+  <div style="padding: 20px">
+    <el-divider content-position="left">已实现功能</el-divider>
+    <ul>
+      <li>1.导出markdown和html功能</li>
+      <li>2.打包下载导出文件</li>
+    </ul>
 
 
-
+    <el-divider content-position="left">后续功能</el-divider>
+    <ul>
+      <li>1.导入功能</li>
+      <li>2.按分类/标签目录导出</li>
+      <li>3.文章导入</li>
+      <li>4.导出后上传至其他平台</li>
+    </ul>
+  </div>
 </template>
 
 <style scoped lang="scss">

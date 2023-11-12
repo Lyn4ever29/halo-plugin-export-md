@@ -9,12 +9,10 @@ spec:
   author:
     name: Lyn4ever
     website: https://jhacker.cn
-  logo: https://halo.run/logo
+  logo: https://img.jhacker.cn/img/export2doc.png
   # 'homepage' usually links to the GitHub repository of the plugin
   homepage: https://jhacker.cn/2023/halo-plugin-export2doc
   # 'displayName' explains what the plugin does in only a few words
-  displayName: "文档导出插件"
-  description: "快速导出文档，支持markdown、word、html等格式。"
-  license:
-    - name: "GPL-3.0"
-      url: "https://github.com/halo-dev/plugin-starter/blob/main/LICENSE"
+  displayName: "文章导入导出"
+  description: "快速导出文章，支持markdown、html等格式，同时支持导入markdown文件。"
+

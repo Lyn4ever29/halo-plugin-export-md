@@ -1,69 +1,88 @@
 <script setup lang="ts">
 import confetti from "canvas-confetti";
-import {onMounted, ref} from "vue";
+import {onMounted, ref,markRaw,shallowRef} from "vue";
+import { useRouteQuery } from "@vueuse/router";
+
 import CarbonPackage from '~icons/carbon/package'
 import AntDesignInfoCircleOutlined from '~icons/ant-design/info-circle-outlined'
 import AboutMe from "@/components/AboutMe.vue";
 import ExportArtical from "@/components/ExportArticalV1.vue";
-
+import axios from "axios";
+import {
+  VTabbar,
+  VCard,
+  VPageHeader,
+  VButton,
+  IconSettings
+} from "@halo-dev/components";
 onMounted(() => {
-  confetti({
-    particleCount: 100,
-    spread: 70,
-    origin: {y: 0.6, x: 0.58},
-  });
+  //散花模式
+  // confetti({
+  //   particleCount: 100,
+  //   spread: 70,
+  //   origin: {y: 0.6, x: 0.58},
+  // });
 });
 
-const activeIndex = ref('1')
+const activeIndex = ref('export2doc')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
   activeIndex.value = keyPath[0]
   console.log(activeIndex.value);
 }
+
+const tabs = shallowRef([
+  {
+    id: "export2doc",
+    label: "导出文章",
+    component: markRaw(ExportArtical),
+  },
+  {
+    id: "about",
+    label: "关于",
+    component: markRaw(AboutMe),
+  },
+]);
+const activeTab =  useRouteQuery<string>("tab", tabs.value[0].id);
+
 </script>
 
 <template>
-  <div class="common-layout" id="plugin-export-anything">
-    <el-container>
-      <el-header>
-        <el-menu
-            :default-active="activeIndex"
-            class="el-menu-demo"
-            mode="horizontal"
-            @select="handleSelect"
-        >
-          <el-menu-item index="1" >
-            <CarbonPackage/>
-            <span>导出文章</span>
-          </el-menu-item>
-          <!--          <el-menu-item index="2">-->
-          <!--            <MdiCalendarImportOutline/>-->
-          <!--            <span>导入文档</span>-->
-          <!--          </el-menu-item>-->
-          <el-menu-item index="4" >
-            <AntDesignInfoCircleOutlined/>
-            <span>关于</span>
-          </el-menu-item>
-          <!--          <el-menu-item index="5">-->
-          <!--            <MaterialSymbolsTipsAndUpdatesOutline/>-->
-          <!--            <span>更新日志</span>-->
-          <!--          </el-menu-item>-->
-        </el-menu>
-      </el-header>
-      <el-main>
-        <!--主内容-->
 
-        <!--文档导出-->
-        <ExportArtical v-if="activeIndex==1"/>
+  <VPageHeader title="文章导出工具">
+    <template #icon>
+      <IconSettings class="mr-2 self-center" />
+    </template>
+<!--    <template #actions>-->
+<!--      <VButton type="secondary" @click="handleCreate">-->
+<!--        <template #icon>-->
+<!--          <IconAddCircle class="h-full w-full" />-->
+<!--        </template>-->
+<!--        {{ $t("core.backup.operations.create.button") }}-->
+<!--      </VButton>-->
+<!--    </template>-->
+  </VPageHeader>
 
-        <!--文档导出-->
-        <AboutMe v-if="activeIndex==4"/>
-
-
-      </el-main>
-      <!--      <el-footer>Footer</el-footer>-->
-    </el-container>
+  <div class="m-0 md:m-4">
+    <VCard :body-class="['!p-0']">
+      <template #header>
+        <VTabbar
+            v-model:active-id="activeTab"
+            :items="tabs.map((item) => ({ id: item.id, label: item.label }))"
+            class="w-full !rounded-none"
+            type="outline"
+        ></VTabbar>
+      </template>
+      <div class="bg-white">
+        <template v-for="tab in tabs" :key="tab.id">
+          <component :is="tab.component" v-if="activeTab === tab.id" />
+        </template>
+      </div>
+    </VCard>
   </div>
+  
+  
+ 
 </template>
 
 <style lang="scss" scoped>
