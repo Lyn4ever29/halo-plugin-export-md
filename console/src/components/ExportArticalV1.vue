@@ -77,7 +77,7 @@ onMounted(init);
 
     <el-table-column align="center" property="name" label="名称">
       <template #default="scope">
-        <el-link type="primary">${scope.name}</el-link>
+        <el-link type="primary">{{scope.name}}</el-link>
       </template>
     </el-table-column>
     <el-table-column align="center" property="createTime" label="创建时间"/>

@@ -1,5 +1,7 @@
 package cn.lyn4ever.plugin.util;
 
+import cn.hutool.core.io.file.FileNameUtil;
+
 /**
  * @author Lyn4ever29
  * @url https://jhacker.cn
@@ -17,8 +19,14 @@ public class FileUtil {
     public static boolean isFileNameValid(String name) {
         if (name == null || name.length() > 255) {
             return false;
-        } else {
-            return name.matches("^[a-zA-Z0-9](?:[a-zA-Z0-9 ._-]*[a-zA-Z0-9])?\\.[a-zA-Z0-9_-]+$");
         }
+        String[] names = name.split("\\.");
+        if (names.length != 2) {
+            return false;
+        }
+        //不能包含 /\:*?"<>|
+        return FileNameUtil.containsInvalid(names[0]);
     }
+
+
 }
