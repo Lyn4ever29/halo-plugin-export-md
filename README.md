@@ -1,45 +1,14 @@
-# plugin-starter
+# halo-plugin-export-md
 
-Halo 2.0 插件开发快速开始模板。
+Halo 2.0 插件——导出文章为MarkDown
 
-## 开发环境
+## 安装
+- 下载Release版本，直接安装即可
 
-插件开发的详细文档请查阅：<https://docs.halo.run/developer-guide/plugin/hello-world>
 
-```bash
-git clone git@github.com:halo-sigs/plugin-starter.git
-
-# 或者当你 fork 之后
-
-git clone git@github.com:{your_github_id}/plugin-starter.git
-```
-
-```bash
-cd path/to/plugin-starter
-```
-
-```bash
-# macOS / Linux
-./gradlew pnpmInstall
-
-# Windows
-./gradlew.bat pnpmInstall
-```
-
-```bash
-# macOS / Linux
-./gradlew build
-
-# Windows
-./gradlew.bat build
-```
-
-修改 Halo 配置文件：
-
-```yaml
-halo:
-  plugin:
-    runtime-mode: development
-    fixedPluginPath:
-      - "/path/to/plugin-starter"
-```
+## Todo
+- [x]  导出为Markdown、Html文件
+- [ ] 导出的Markdown文件包含属性
+- [ ] Markdown文章导入
+- [ ] 按筛选条件、固定格式导出
+- [ ] 从其他平台导入博客
