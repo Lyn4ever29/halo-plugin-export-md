@@ -5,8 +5,8 @@ import { useRouteQuery } from "@vueuse/router";
 
 import CarbonPackage from '~icons/carbon/package'
 import AntDesignInfoCircleOutlined from '~icons/ant-design/info-circle-outlined'
-import AboutMe from "@/components/AboutMe.vue";
-import ExportArtical from "@/components/ExportArticalV1.vue";
+import ImportArtical from "@/views/ImportArtical.vue";
+import ExportArtical from "@/views/ExportArticalV1.vue";
 import axios from "axios";
 import {
   VTabbar,
@@ -38,9 +38,9 @@ const tabs = shallowRef([
     component: markRaw(ExportArtical),
   },
   {
-    id: "about",
-    label: "关于",
-    component: markRaw(AboutMe),
+    id: "import_doc",
+    label: "导入文章",
+    component: markRaw(ImportArtical),
   },
 ]);
 const activeTab =  useRouteQuery<string>("tab", tabs.value[0].id);
@@ -61,6 +61,7 @@ const activeTab =  useRouteQuery<string>("tab", tabs.value[0].id);
 <!--        {{ $t("core.backup.operations.create.button") }}-->
 <!--      </VButton>-->
 <!--    </template>-->
+    
   </VPageHeader>
 
   <div class="m-0 md:m-4">
@@ -86,7 +87,6 @@ const activeTab =  useRouteQuery<string>("tab", tabs.value[0].id);
 </template>
 
 <style lang="scss" scoped>
-@import 'element-plus/dist/index.css';
 
 #plugin-export-anything {
   height: 100vh;

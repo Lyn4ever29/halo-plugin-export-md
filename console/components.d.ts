@@ -7,16 +7,9 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AboutMe: typeof import('./src/components/AboutMe.vue')['default']
-    ElButton: typeof import('element-plus/es')['ElButton']
-    ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElDivider: typeof import('element-plus/es')['ElDivider']
-    ElLink: typeof import('element-plus/es')['ElLink']
-    ElTable: typeof import('element-plus/es')['ElTable']
-    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ExportArtical: typeof import('./src/components/ExportArtical.vue')['default']
-    ExportArticalV1: typeof import('./src/components/ExportArticalV1.vue')['default']
+    EntityDropdownItems: typeof import('./src/components/entity/EntityDropdownItems.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UppyUpload: typeof import('./src/components/upload/UppyUpload.vue')['default']
   }
 }
