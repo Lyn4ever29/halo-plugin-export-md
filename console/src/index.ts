@@ -1,7 +1,7 @@
-import { definePlugin } from "@halo-dev/console-shared";
+import {definePlugin} from "@halo-dev/console-shared";
 import HomeView from "./views/HomeView.vue";
-import { IconPlug } from "@halo-dev/components";
-import { markRaw } from "vue";
+import {IconArrowUpDownLine} from "@halo-dev/components";
+import {markRaw} from "vue";
 
 export default definePlugin({
   components: {},
@@ -13,12 +13,12 @@ export default definePlugin({
         name: "export2doc",
         component: HomeView,
         meta: {
-          title: "文章导出",
+          title: "文章导入导出",
           searchable: true,
           menu: {
-            name: "文章导出",
-            group: "工具",
-            icon: markRaw(IconPlug),
+            name: "文章导入导出",
+            group: "tool",
+            icon: markRaw(IconArrowUpDownLine),
             priority: 0,
           },
         },

@@ -11,6 +11,11 @@ import java.nio.file.Paths;
  * @date 2023/11/11
  */
 public class FileUtil {
+    private static final String  ROOT_PATH="/.halo/plugins/export2doc_files";
+    public enum DirPath{
+        EXPORT,
+        IMPORT;
+    }
 
 
     /**
@@ -30,11 +35,12 @@ public class FileUtil {
 
     /**
      * 获取导出文件的路径
+     *
      * @return
      */
-    public static Path getDocFile() {
+    public static Path getDocFile(DirPath dirPath) {
         String userHome = System.getProperty("user.home");
-        Path path = Paths.get(userHome, ".halo").resolve("plugins").resolve("export2doc_files");
+        Path path = Paths.get(userHome, ROOT_PATH).resolve(dirPath.name().toLowerCase());
         if (!path.toFile().exists()) {
             path.toFile().mkdirs();
         }

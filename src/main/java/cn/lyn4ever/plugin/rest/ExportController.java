@@ -3,14 +3,12 @@ package cn.lyn4ever.plugin.rest;
 import cn.lyn4ever.plugin.schema.ExportLogSchema;
 import cn.lyn4ever.plugin.service.ExportService;
 import cn.lyn4ever.plugin.util.FileUtil;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ZeroCopyHttpOutputMessage;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -21,7 +19,6 @@ import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.plugin.ApiVersion;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -91,14 +88,15 @@ public class ExportController {
             return Mono.empty();
         }
 
-        Path docFile = FileUtil.getDocFile();
+        Path docFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT);
         File file = new File(docFile.toFile().getAbsolutePath() + "/" + path + ".zip");
-        System.out.println(file.getAbsolutePath());
         if (!file.exists()) {
-            throw new RuntimeException("文件不存在");
+            //todo 适配旧版本,未来会删除
+            file = new File(docFile.toFile().getAbsolutePath() + "/../" + path + ".zip");
+            if (!file.exists()) {
+                throw new RuntimeException("文件不存在");
+            }
         }
-        System.out.println("================");
-
 
         ZeroCopyHttpOutputMessage zeroCopyResponse = (ZeroCopyHttpOutputMessage) response;
         HttpHeaders headers = zeroCopyResponse.getHeaders();
@@ -113,19 +111,4 @@ public class ExportController {
     }
 
 
-    /**
-     * 文件上传
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws InvalidFormatException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    public Mono<Void> exportImport(@RequestPart("file") FilePart file) throws IOException, InvalidFormatException, IllegalAccessException, InstantiationException {
-        File file1 = new File(file.filename());
-        file.transferTo(file1);
-        return null;
-    }
 }

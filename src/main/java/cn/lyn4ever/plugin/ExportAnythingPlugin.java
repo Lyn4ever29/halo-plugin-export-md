@@ -1,10 +1,10 @@
 package cn.lyn4ever.plugin;
 
 import cn.lyn4ever.plugin.schema.ExportLogSchema;
+import cn.lyn4ever.plugin.schema.ImportLogSchema;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 import org.springframework.stereotype.Component;
-import run.halo.app.extension.Scheme;
 import run.halo.app.extension.SchemeManager;
 import run.halo.app.plugin.BasePlugin;
 
@@ -30,15 +30,15 @@ public class ExportAnythingPlugin extends BasePlugin {
     public void start() {
         // 插件启动时注册自定义模型
         schemeManager.register(ExportLogSchema.class);
-        System.out.println("启动插件====");
+        schemeManager.register(ImportLogSchema.class);
     }
 
     @Override
     public void stop() {
         // 插件停用时取消注册自定义模型
-        Scheme exportLog = schemeManager.get(ExportLogSchema.class);
-        schemeManager.unregister(exportLog);
-        System.out.println("插件停止====");
+        schemeManager.unregister(schemeManager.get(ExportLogSchema.class));
+        schemeManager.unregister(schemeManager.get(ImportLogSchema.class));
+
     }
 
     /**

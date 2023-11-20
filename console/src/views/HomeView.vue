@@ -1,35 +1,21 @@
 <script setup lang="ts">
-import confetti from "canvas-confetti";
-import {onMounted, ref,markRaw,shallowRef} from "vue";
-import { useRouteQuery } from "@vueuse/router";
-
-import CarbonPackage from '~icons/carbon/package'
-import AntDesignInfoCircleOutlined from '~icons/ant-design/info-circle-outlined'
+import {markRaw, ref, shallowRef} from "vue";
 import ImportArtical from "@/views/ImportArtical.vue";
-import ExportArtical from "@/views/ExportArticalV1.vue";
-import axios from "axios";
+import ExportArtical from "@/views/ExportArtical.vue";
 import {
-  VTabbar,
+  IconArrowDownCircleLine,
+  IconArrowUpCircleLine,
+  IconArrowUpDownLine,
+  VButton,
   VCard,
   VPageHeader,
-  VButton,
-  IconSettings
+  VSpace,
+  VTabbar
 } from "@halo-dev/components";
-onMounted(() => {
-  //散花模式
-  // confetti({
-  //   particleCount: 100,
-  //   spread: 70,
-  //   origin: {y: 0.6, x: 0.58},
-  // });
-});
+
 
 const activeIndex = ref('export2doc')
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-  activeIndex.value = keyPath[0]
-  console.log(activeIndex.value);
-}
+ 
 
 const tabs = shallowRef([
   {
@@ -43,47 +29,64 @@ const tabs = shallowRef([
     component: markRaw(ImportArtical),
   },
 ]);
-const activeTab =  useRouteQuery<string>("tab", tabs.value[0].id);
+// const activeTab = useRouteQuery<string>("tab", tabs.value[0].id);
 
+const export2doc = ref();
+const import_doc = ref();
+
+//新增导出
+const handleCreate = () => {
+  export2doc.value.confirmExport()
+}
 </script>
 
 <template>
 
-  <VPageHeader title="文章导出">
+  <VPageHeader title="文章导入导出">
     <template #icon>
-      <IconSettings class="mr-2 self-center" />
+      <IconArrowUpDownLine  class="mr-2 self-center"/>
     </template>
-<!--    <template #actions>-->
-<!--      <VButton type="secondary" @click="handleCreate">-->
-<!--        <template #icon>-->
-<!--          <IconAddCircle class="h-full w-full" />-->
-<!--        </template>-->
-<!--        {{ $t("core.backup.operations.create.button") }}-->
-<!--      </VButton>-->
-<!--    </template>-->
-    
+    <template #actions>
+      <VSpace>
+
+        <VButton type="default" size="sm" :route="{name:'export2doc',query:{tab:'import_doc'}}">
+          <template #icon>
+            <IconArrowUpCircleLine class="h-full w-full"/>
+          </template>
+          导入文章
+        </VButton>
+          <VButton type="secondary" @click="handleCreate">
+              <template #icon>
+                  <IconArrowDownCircleLine class="h-full w-full"/>
+              </template>
+              导出文章
+          </VButton>
+      </VSpace>
+    </template>
+
   </VPageHeader>
 
   <div class="m-0 md:m-4">
     <VCard :body-class="['!p-0']">
       <template #header>
         <VTabbar
-            v-model:active-id="activeTab"
+            v-model:active-id="activeIndex"
             :items="tabs.map((item) => ({ id: item.id, label: item.label }))"
             class="w-full !rounded-none"
             type="outline"
         ></VTabbar>
       </template>
       <div class="bg-white">
-        <template v-for="tab in tabs" :key="tab.id">
-          <component :is="tab.component" v-if="activeTab === tab.id" />
-        </template>
+        <ImportArtical ref="import_doc" v-if="activeIndex=='import_doc'"/>
+        <ExportArtical ref="export2doc" v-if="activeIndex=='export2doc'"/>
+<!--        <template v-for="tab in tabs" :key="tab.id">-->
+<!--          <component :is="tab.component" :ref="tab.id" v-if="activeTab === tab.id"/>-->
+<!--        </template>-->
       </div>
     </VCard>
   </div>
-  
-  
- 
+
+
 </template>
 
 <style lang="scss" scoped>

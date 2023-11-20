@@ -1,7 +1,6 @@
 package cn.lyn4ever.plugin.service;
 
 import cn.hutool.core.util.ZipUtil;
-import cn.hutool.json.JSONUtil;
 import cn.lyn4ever.plugin.dto.ContentWrapper;
 import cn.lyn4ever.plugin.schema.ExportLogSchema;
 import cn.lyn4ever.plugin.util.FileUtil;
@@ -10,8 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import run.halo.app.core.extension.content.Category;
 import run.halo.app.core.extension.content.Post;
 import run.halo.app.core.extension.content.Snapshot;
+import run.halo.app.core.extension.content.Tag;
 import run.halo.app.extension.ExtensionClient;
 import run.halo.app.extension.ListResult;
 import run.halo.app.extension.MetadataOperator;
@@ -38,6 +39,10 @@ import java.util.function.Predicate;
 public class ExportService {
 
 
+    public static ThreadLocal<Map<String, String>> TagPool = new ThreadLocal<>();
+    public static ThreadLocal<Map<String, String>> CatePool = new ThreadLocal<>();
+
+
     private final int pageSize = 20;
 
     private final Map<String, String> extendNameMap = new HashMap<>() {{
@@ -51,6 +56,7 @@ public class ExportService {
 
     /**
      * 运行导出任务
+     *
      * @param exportLogSchema
      */
     public void runTask(ExportLogSchema exportLogSchema) {
@@ -69,20 +75,16 @@ public class ExportService {
 
 
         ListResult<Post> listResult = client.list(Post.class, paramPredicate, null, 1, pageSize);
-        System.out.println("===================");
-        System.out.println(exportLogSchema);
-        System.out.println("===================");
 
 
         //分页导出数据
-        System.out.println("开始写文件123");
         //分页获取文章并处理
         for (int i = 1; i <= listResult.getTotalPages(); i++) {
             ListResult<Post> posts = client.list(Post.class, paramPredicate, null, i, pageSize);
             detailPost(posts.getItems(), exportLogSchema.getName());
         }
         //打包文件
-        File absoluteFile = FileUtil.getDocFile().toFile().getAbsoluteFile();
+        File absoluteFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT).toFile().getAbsoluteFile();
         ZipUtil.zip(absoluteFile + "/" + exportLogSchema.getName(), absoluteFile + "/" + exportLogSchema.getName() + ".zip");
 
         //修改状态
@@ -124,7 +126,7 @@ public class ExportService {
      * @param name
      */
     private void writeContent(Post post, ContentWrapper content, String name) {
-        Path docFile = FileUtil.getDocFile();
+        Path docFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT);
         File dir = new File(docFile.toFile().getAbsoluteFile() + "/" + name);
         //判读文件夹是否存在
         if (!dir.exists()) {
@@ -137,7 +139,7 @@ public class ExportService {
         //判断文件名是否合法
         String fileName = post.getSpec().getTitle();
         if (!FileUtil.isCorrectName(fileName)) {
-            fileName =post.getSpec().getSlug();
+            fileName = post.getSpec().getSlug();
         }
         String finalFileName = dir.getAbsoluteFile() + "/" + fileName + extendName;
 
@@ -147,7 +149,7 @@ public class ExportService {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             //markdown文件的属性
             //todo 先关闭写属性操作
-            if (false && StringUtils.equals(extendName, ".md")) {
+            if (StringUtils.equals(extendName, ".md")) {
                 Post.PostStatus postStatus = post.getStatus();
                 Post.PostSpec postSpec = post.getSpec();
                 MetadataOperator postMetadata = post.getMetadata();
@@ -169,26 +171,26 @@ public class ExportService {
 
                 writer.write(String.format("auther: %s\n", postSpec.getOwner()));
                 //摘录
-                writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt()));
+                writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt().replaceAll("\n","")));
                 //永久链接
                 writer.write(String.format("permalink: %s\n", postStatus.getPermalink()));
                 //分类
                 //分类-1 获取全部分类
 
-                writer.write("categories:");
+                writer.write("categories:\n");
                 if (postSpec.getCategories() != null) {
                     for (String category : postSpec.getCategories()) {
-                        writer.write(String.format("\t-%s\n", category));
+                        writer.write(String.format("\t-%s\n", getCateTrueName(category)));
                     }
                 }
                 //标签
                 writer.write("tags: \n");
                 if (postSpec.getTags() != null) {
                     for (String tag : postSpec.getTags()) {
-                        writer.write(String.format("\t-%s\n", tag));
+                        writer.write(String.format("\t-%s\n", getTagTrueName(tag)));
                     }
                 }
-                writer.write("---\n");
+                writer.write("---\n\n");
             }
 
             //内容
@@ -197,6 +199,62 @@ public class ExportService {
             log.warn("写文件:{}-{}", content.getRawType(), file.getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 根据id来查询真是的分类名称
+     *
+     * @param name
+     * @return
+     */
+    private String getCateTrueName(String name) {
+        Map<String, String> map = CatePool.get();
+        if (null == map) {
+            map = new HashMap<>();
+        }
+        String cateName = map.get(name);
+
+        if (StringUtils.isNotBlank(cateName)) {
+            return cateName;
+        } else {
+            //查询
+            Optional<Category> fetch = client.fetch(Category.class, name);
+            if (fetch.isPresent()) {
+                Category category = fetch.get();
+                map.put(name, category.getSpec().getSlug());
+                return category.getSpec().getSlug();
+            } else {
+                //没有找到合适的
+                return name;
+            }
+        }
+    }
+
+    /**
+     * 根据id查找tag
+     *
+     * @param name
+     * @return
+     */
+    private String getTagTrueName(String name) {
+        Map<String, String> map = TagPool.get();
+        if (null == map) {
+            map = new HashMap<>();
+        }
+        String tagName = map.get(name);
+        if (StringUtils.isNotBlank(tagName)) {
+            return tagName;
+        } else {
+            //查询
+            Optional<Tag> fetch = client.fetch(Tag.class, name);
+            if (fetch.isPresent()) {
+                Tag tag = fetch.get();
+                map.put(name, tag.getSpec().getSlug());
+                return tag.getSpec().getSlug();
+            } else {
+                return name;
+            }
         }
     }
 
@@ -260,12 +318,12 @@ public class ExportService {
 
     public void delete(String name) {
 
-       String fileName = FileUtil.getDocFile().toFile().getAbsolutePath()+"/"+name;
+        String fileName = FileUtil.getDocFile(FileUtil.DirPath.EXPORT).toFile().getAbsolutePath() + "/" + name;
 
         //删除文件夹
         cn.hutool.core.io.FileUtil.del(fileName);
         //删除压缩文件
-        cn.hutool.core.io.FileUtil.del(fileName+".zip");
+        cn.hutool.core.io.FileUtil.del(fileName + ".zip");
 
 
     }
