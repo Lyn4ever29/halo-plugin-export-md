@@ -11,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ZeroCopyHttpOutputMessage;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import run.halo.app.extension.ExtensionClient;
 import run.halo.app.extension.Metadata;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.plugin.ApiVersion;
@@ -40,11 +40,15 @@ import java.util.Date;
 public class ExportController {
 // /apis/plugin.api.halo.run/v1alpha1/plugins/export-anything/doExport/**
 
+    private final String EXPORT_ONE_DIR = "markdown_post";
+
     @Autowired
     private ExportService exportService;
 
     @Autowired
     private ReactiveExtensionClient reactiveClient;
+    @Autowired
+    private ExtensionClient commonClient;
 
 
     @PostMapping("/export")
@@ -54,7 +58,6 @@ public class ExportController {
         //设置元数据才能保存
         exportLogSchema.setMetadata(new Metadata());
         exportLogSchema.getMetadata().setName(exportLogSchema.getName());
-
 
         return reactiveClient.create(exportLogSchema).doOnSuccess(
                 exportLogSchema1 -> {
@@ -66,6 +69,34 @@ public class ExportController {
         );
     }
 
+    /**
+     * 导出单篇文章
+     *
+     * @param name
+     * @return
+     */
+    @GetMapping("/export_one/{name}")
+    public Mono<Void> fetchHeadContent(@PathVariable("name") String name, ServerHttpResponse response) throws UnsupportedEncodingException {
+
+        return Mono.fromCallable(() -> {
+                    //写文件
+                    String fileName = exportService.writePost(name, EXPORT_ONE_DIR);
+                    File file = new File(fileName);
+
+                    ZeroCopyHttpOutputMessage zeroCopyResponse = (ZeroCopyHttpOutputMessage) response;
+                    HttpHeaders headers = zeroCopyResponse.getHeaders();
+                    headers.set("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8));
+                    headers.set("file-name", URLEncoder.encode(file.getName(), StandardCharsets.UTF_8));
+                    headers.set("Access-Control-Allow-Origin", "*");
+                    MediaType application = new MediaType("application", "octet-stream", StandardCharsets.UTF_8);
+                    headers.setContentType(application);
+                    zeroCopyResponse.writeWith(file, 0, file.length()).subscribe();
+                    return "";
+                })
+                .publishOn(Schedulers.boundedElastic()).then();
+
+
+    }
 
     @PostMapping("/del")
     public Mono<Void> delete(@RequestBody String[] names) {
@@ -83,8 +114,12 @@ public class ExportController {
     }
 
     @GetMapping("/down/{path}")
-    public Mono<ServerResponse> down(@PathVariable("path") String path, ServerHttpResponse response) throws UnsupportedEncodingException {
+    public Mono<Void> down(@PathVariable("path") String path, ServerHttpResponse response) {
         if (StringUtils.isBlank(path)) {
+            return Mono.empty();
+        }
+        if (path.split("\\.").length > 2) {
+            //包含太多.的路径，不可下载
             return Mono.empty();
         }
 
@@ -100,14 +135,14 @@ public class ExportController {
 
         ZeroCopyHttpOutputMessage zeroCopyResponse = (ZeroCopyHttpOutputMessage) response;
         HttpHeaders headers = zeroCopyResponse.getHeaders();
-        headers.set("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
-        headers.set("file-name", URLEncoder.encode(path, "UTF-8"));
+        headers.set("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8));
+        headers.set("file-name", URLEncoder.encode(path, StandardCharsets.UTF_8));
         headers.set("Access-Control-Allow-Origin", "*");
         MediaType application = new MediaType("application", "octet-stream", StandardCharsets.UTF_8);
         headers.setContentType(application);
         zeroCopyResponse.writeWith(file, 0, file.length()).subscribe();
 
-        return null;
+        return Mono.empty();
     }
 
 

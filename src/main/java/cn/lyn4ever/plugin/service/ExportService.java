@@ -81,7 +81,9 @@ public class ExportService {
         //分页获取文章并处理
         for (int i = 1; i <= listResult.getTotalPages(); i++) {
             ListResult<Post> posts = client.list(Post.class, paramPredicate, null, i, pageSize);
-            detailPost(posts.getItems(), exportLogSchema.getName());
+            posts.getItems().forEach(post -> {
+                writePost(post.getMetadata().getName(), exportLogSchema.getName());
+            });
         }
         //打包文件
         File absoluteFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT).toFile().getAbsoluteFile();
@@ -103,19 +105,39 @@ public class ExportService {
      * @param items
      * @param dirName 导出计划名称-保存文件夹
      */
-    private void detailPost(List<Post> items, String dirName) {
-        for (Post post : items) {
-            //获取文章详情
-            client.fetch(Post.class, post.getMetadata().getName())
-                    .ifPresent(wholePost -> {
-                        //获取文章内容
-                        String releaseSnapshot = wholePost.getSpec().getReleaseSnapshot();
-                        ContentWrapper content = getContent(releaseSnapshot, wholePost.getSpec().getBaseSnapshot());
-                        if (null != content) {
-                            writeContent(post, content, dirName);
-                        }
-                    });
+//    private void detailPost(List<Post> items, String dirName) {
+//        for (Post post : items) {
+//            //获取文章详情
+//            client.fetch(Post.class, post.getMetadata().getName())
+//                    .ifPresent(wholePost -> {
+//                        //获取文章内容
+//                        String releaseSnapshot = wholePost.getSpec().getReleaseSnapshot();
+//                        ContentWrapper content = getContent(releaseSnapshot, wholePost.getSpec().getBaseSnapshot());
+//                        if (null != content) {
+//                            writeContent(post, content, dirName);
+//                        }
+//                    });
+//        }
+//    }
+
+    /**
+     * 将文章到文件里
+     *
+     * @param name 文章的name
+     * @param path 保存的文件夹(上一级)
+     */
+    public String writePost(String name, String path) {
+        Optional<Post> fetch = client.fetch(Post.class, name);
+        if (fetch.isPresent()) {
+            Post wholePost = fetch.get();
+            //获取文章内容
+            String releaseSnapshot = wholePost.getSpec().getReleaseSnapshot();
+            ContentWrapper content = getContent(releaseSnapshot, wholePost.getSpec().getBaseSnapshot());
+            if (null != content) {
+                return writeContent(wholePost, content, path);
+            }
         }
+        return "";
     }
 
     /**
@@ -125,7 +147,7 @@ public class ExportService {
      * @param content
      * @param name
      */
-    private void writeContent(Post post, ContentWrapper content, String name) {
+    private String writeContent(Post post, ContentWrapper content, String name) {
         Path docFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT);
         File dir = new File(docFile.toFile().getAbsoluteFile() + "/" + name);
         //判读文件夹是否存在
@@ -148,7 +170,6 @@ public class ExportService {
             File file = new File(finalFileName);
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             //markdown文件的属性
-            //todo 先关闭写属性操作
             if (StringUtils.equals(extendName, ".md")) {
                 Post.PostStatus postStatus = post.getStatus();
                 Post.PostSpec postSpec = post.getSpec();
@@ -171,7 +192,7 @@ public class ExportService {
 
                 writer.write(String.format("auther: %s\n", postSpec.getOwner()));
                 //摘录
-                writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt().replaceAll("\n","")));
+                writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt().replaceAll("\n", "")));
                 //永久链接
                 writer.write(String.format("permalink: %s\n", postStatus.getPermalink()));
                 //分类
@@ -200,6 +221,7 @@ public class ExportService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return finalFileName;
     }
 
     /**
