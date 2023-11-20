@@ -14,7 +14,7 @@ spec:
   homepage: https://jhacker.cn/2023/halo-plugin-export2doc
   # 'displayName' explains what the plugin does in only a few words
   displayName: "文章导入导出"
-  description: "导出文章为markdown文件，同时支持导入markdown文件"
+  description: "导出文章为markdown、HTML文件，同时支持导入markdown文件"
   license:
     - name: "GPL-3.0"
       url: "https://github.com/halo-dev/plugin-starter/blob/main/LICENSE"
