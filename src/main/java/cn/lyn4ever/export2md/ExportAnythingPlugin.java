@@ -1,7 +1,7 @@
-package cn.lyn4ever.plugin;
+package cn.lyn4ever.export2md;
 
-import cn.lyn4ever.plugin.schema.ExportLogSchema;
-import cn.lyn4ever.plugin.schema.ImportLogSchema;
+import cn.lyn4ever.export2md.schema.ExportLogSchema;
+import cn.lyn4ever.export2md.schema.ImportLogSchema;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 import org.springframework.stereotype.Component;

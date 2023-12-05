@@ -1,8 +1,8 @@
-package cn.lyn4ever.plugin.rest;
+package cn.lyn4ever.export2md.rest;
 
-import cn.lyn4ever.plugin.schema.ExportLogSchema;
-import cn.lyn4ever.plugin.service.ExportService;
-import cn.lyn4ever.plugin.util.FileUtil;
+import cn.lyn4ever.export2md.schema.ExportLogSchema;
+import cn.lyn4ever.export2md.service.impl.ExportServiceImpl;
+import cn.lyn4ever.export2md.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ExportController {
     private final String EXPORT_ONE_DIR = "markdown_post";
 
     @Autowired
-    private ExportService exportService;
+    private ExportServiceImpl exportService;
 
     @Autowired
     private ReactiveExtensionClient reactiveClient;
@@ -128,6 +128,10 @@ public class ExportController {
         if (!file.exists()) {
             //todo 适配旧版本,未来会删除
             file = new File(docFile.toFile().getAbsolutePath() + "/../" + path + ".zip");
+            if (!file.exists()) {
+                //todo 适配旧版本,未来会删除
+                file = new File(System.getProperty("user.home")+"/.halo/plugins/export2doc_files/" + path + ".zip");
+            }
             if (!file.exists()) {
                 throw new RuntimeException("文件不存在");
             }

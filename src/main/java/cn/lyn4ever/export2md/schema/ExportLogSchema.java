@@ -1,4 +1,4 @@
-package cn.lyn4ever.plugin.schema;
+package cn.lyn4ever.export2md.schema;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package cn.lyn4ever.plugin.util;
+package cn.lyn4ever.export2md.util;
 
 import cn.hutool.core.io.file.FileNameUtil;
 
@@ -11,7 +11,7 @@ import java.nio.file.Paths;
  * @date 2023/11/11
  */
 public class FileUtil {
-    private static final String  ROOT_PATH="/.halo/plugins/export2doc_files";
+    private static final String  ROOT_PATH="/.halo2/plugins/export2doc_files";
     public enum DirPath{
         EXPORT,
         IMPORT;

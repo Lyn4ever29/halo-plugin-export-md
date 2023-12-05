@@ -1,13 +1,24 @@
-package cn.lyn4ever.plugin.service;
+package cn.lyn4ever.export2md.service.impl;
 
 import cn.hutool.core.lang.UUID;
-import cn.lyn4ever.plugin.schema.ImportLogSchema;
-import cn.lyn4ever.plugin.util.FileUtil;
+import cn.lyn4ever.export2md.schema.ImportLogSchema;
+import cn.lyn4ever.export2md.service.ImportService;
+import cn.lyn4ever.export2md.util.FileUtil;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.markdown4j.Markdown4jProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
-import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 import run.halo.app.core.extension.content.Post;
 import run.halo.app.core.extension.content.Snapshot;
 import run.halo.app.extension.ExtensionClient;
@@ -15,17 +26,17 @@ import run.halo.app.extension.Metadata;
 import run.halo.app.extension.MetadataUtil;
 import run.halo.app.extension.Ref;
 
-import java.io.*;
-import java.util.*;
-
 /**
  * @author Lyn4ever29
+ * @deprecated since 1.2.0
  * @url https://jhacker.cn
  * @date 2023/11/12
  */
-@Component
+// @Service
 @Slf4j
-public class ImportService {
+@RequiredArgsConstructor
+@Deprecated
+public class ImportServiceV1 implements ImportService {
 
 
     private final int pageSize = 20;
@@ -36,20 +47,20 @@ public class ImportService {
         put("json", ".josn");
 
     }};
-    @Autowired
-    private ExtensionClient client;
+    private final ExtensionClient client;
+
 
     /**
      * 运行导出任务
      *
      * @param filePart
      */
-    public void runTask(FilePart filePart,String owner) {
+    public void runTask(FilePart filePart, String owner) {
         long old = System.currentTimeMillis();
 
         //保存文件
         File file = new File(FileUtil.getDocFile(FileUtil.DirPath.IMPORT).toFile().getAbsolutePath()
-                + "/" + filePart.filename());
+            + "/" + filePart.filename());
         filePart.transferTo(file).block();
 
         BufferedReader reader = null;
@@ -128,7 +139,6 @@ public class ImportService {
         postSpec.setReleaseSnapshot(snapshot.getMetadata().getName());
 
 
-
         ImportLogSchema schema = new ImportLogSchema();
         schema.setCreateTime(new Date());
         schema.setPostName(post.getMetadata().getName());
@@ -142,6 +152,15 @@ public class ImportService {
         client.create(schema);
     }
 
+    /**
+     * 运行导出任务
+     *
+     * @param file
+     */
+    @Override
+    public Mono<Post> runTask(File file) {
+        return null;
+    }
 }
 
 

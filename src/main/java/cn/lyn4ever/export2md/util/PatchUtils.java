@@ -1,4 +1,4 @@
-package cn.lyn4ever.plugin.util;
+package cn.lyn4ever.export2md.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.difflib.DiffUtils;

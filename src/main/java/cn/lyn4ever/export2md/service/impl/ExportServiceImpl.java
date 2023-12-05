@@ -1,9 +1,10 @@
-package cn.lyn4ever.plugin.service;
+package cn.lyn4ever.export2md.service.impl;
 
 import cn.hutool.core.util.ZipUtil;
-import cn.lyn4ever.plugin.dto.ContentWrapper;
-import cn.lyn4ever.plugin.schema.ExportLogSchema;
-import cn.lyn4ever.plugin.util.FileUtil;
+import cn.lyn4ever.export2md.halo.ContentWrapper;
+import cn.lyn4ever.export2md.schema.ExportLogSchema;
+import cn.lyn4ever.export2md.service.ExportService;
+import cn.lyn4ever.export2md.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ import java.util.function.Predicate;
  */
 @Component
 @Slf4j
-public class ExportService {
+public class ExportServiceImpl implements ExportService {
 
 
     public static ThreadLocal<Map<String, String>> TagPool = new ThreadLocal<>();
@@ -59,6 +60,7 @@ public class ExportService {
      *
      * @param exportLogSchema
      */
+    @Override
     public void runTask(ExportLogSchema exportLogSchema) {
         long old = System.currentTimeMillis();
         //根据配置获取对应的文章
@@ -147,9 +149,10 @@ public class ExportService {
      * @param content
      * @param name
      */
-    private String writeContent(Post post, ContentWrapper content, String name) {
+    private String writeContent(Post post, ContentWrapper content, String path) {
         Path docFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT);
-        File dir = new File(docFile.toFile().getAbsoluteFile() + "/" + name);
+        //文件夹
+        File dir = new File(docFile.toFile().getAbsoluteFile() + "/" + path);
         //判读文件夹是否存在
         if (!dir.exists()) {
             dir.mkdirs();
@@ -185,30 +188,30 @@ public class ExportService {
                 //  ---
                 writer.write("---\n");
                 writer.write(String.format("title: %s\n", postSpec.getTitle()));
+                writer.write(String.format("id: %s\n", postMetadata.getName()));
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String formatDate = postMetadata.getCreationTimestamp().atZone(ZoneId.systemDefault()).format(formatter);
                 writer.write(String.format("date: %s\n", formatDate));
 
                 writer.write(String.format("auther: %s\n", postSpec.getOwner()));
-                //摘录
-                writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt().replaceAll("\n", "")));
+                //摘录 不允许存在:和\n
+                writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt().replaceAll("\n", "").replaceAll(":","")));
                 //永久链接
                 writer.write(String.format("permalink: %s\n", postStatus.getPermalink()));
                 //分类
                 //分类-1 获取全部分类
-
-                writer.write("categories:\n");
                 if (postSpec.getCategories() != null) {
+                    writer.write("categories:\n");
                     for (String category : postSpec.getCategories()) {
-                        writer.write(String.format("\t-%s\n", getCateTrueName(category)));
+                        writer.write(String.format(" - %s\n", getCateTrueName(category)));
                     }
                 }
                 //标签
-                writer.write("tags: \n");
                 if (postSpec.getTags() != null) {
+                    writer.write("tags: \n");
                     for (String tag : postSpec.getTags()) {
-                        writer.write(String.format("\t-%s\n", getTagTrueName(tag)));
+                        writer.write(String.format(" - %s\n", getTagTrueName(tag)));
                     }
                 }
                 writer.write("---\n\n");
@@ -280,24 +283,6 @@ public class ExportService {
         }
     }
 
-    boolean contains(Collection<String> left, List<String> right) {
-        // parameter is null, it means that ignore this condition
-        if (left == null) {
-            return true;
-        }
-        // else, it means that right is empty
-        if (left.isEmpty()) {
-            return right.isEmpty();
-        }
-        if (right == null) {
-            return false;
-        }
-        return right.stream().anyMatch(left::contains);
-    }
-
-    private Set<String> listToSet(List<String> param) {
-        return param == null ? null : Set.copyOf(param);
-    }
 
 
     /**

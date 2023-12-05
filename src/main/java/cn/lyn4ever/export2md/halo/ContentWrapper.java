@@ -1,6 +1,6 @@
-package cn.lyn4ever.plugin.dto;
+package cn.lyn4ever.export2md.halo;
 
-import cn.lyn4ever.plugin.util.PatchUtils;
+import cn.lyn4ever.export2md.util.PatchUtils;
 import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;

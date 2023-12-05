@@ -2,6 +2,8 @@
 import {markRaw, ref, shallowRef} from "vue";
 import ImportArtical from "@/views/ImportArtical.vue";
 import ExportArtical from "@/views/ExportArtical.vue";
+import { useRouteQuery } from "@vueuse/router";
+
 import {
   IconArrowDownCircleLine,
   IconArrowUpCircleLine,
@@ -14,8 +16,8 @@ import {
 } from "@halo-dev/components";
 
 
-const activeIndex = ref('export2doc')
- 
+// const activeIndex = ref('export2doc')
+
 
 const tabs = shallowRef([
   {
@@ -24,15 +26,17 @@ const tabs = shallowRef([
     component: markRaw(ExportArtical),
   },
   {
-    id: "import_doc",
+    id: "import4doc",
     label: "导入文章",
     component: markRaw(ImportArtical),
   },
 ]);
-// const activeTab = useRouteQuery<string>("tab", tabs.value[0].id);
+
+const activeIndex = useRouteQuery<string>("tab", tabs.value[0].id);
+
 
 const export2doc = ref();
-const import_doc = ref();
+const import4doc = ref();
 
 //新增导出
 const handleCreate = () => {
@@ -49,18 +53,18 @@ const handleCreate = () => {
     <template #actions>
       <VSpace>
 
-        <VButton type="default" size="sm" :route="{name:'export2doc',query:{tab:'import_doc'}}">
+        <VButton type="default" size="sm" :route="{name:'export2doc',query:{tab:'import4doc'}}">
           <template #icon>
             <IconArrowUpCircleLine class="h-full w-full"/>
           </template>
           导入文章
         </VButton>
-          <VButton type="secondary" @click="handleCreate">
-              <template #icon>
-                  <IconArrowDownCircleLine class="h-full w-full"/>
-              </template>
-              导出文章
-          </VButton>
+        <VButton type="secondary" @click="handleCreate">
+          <template #icon>
+            <IconArrowDownCircleLine class="h-full w-full"/>
+          </template>
+          导出文章
+        </VButton>
       </VSpace>
     </template>
 
@@ -77,7 +81,7 @@ const handleCreate = () => {
         ></VTabbar>
       </template>
       <div class="bg-white">
-        <ImportArtical ref="import_doc" v-if="activeIndex=='import_doc'"/>
+        <ImportArtical ref="import4doc" v-if="activeIndex=='import4doc'"/>
         <ExportArtical ref="export2doc" v-if="activeIndex=='export2doc'"/>
 <!--        <template v-for="tab in tabs" :key="tab.id">-->
 <!--          <component :is="tab.component" :ref="tab.id" v-if="activeTab === tab.id"/>-->
