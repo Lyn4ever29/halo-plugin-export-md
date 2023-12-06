@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import run.halo.app.core.extension.content.Post;
 import run.halo.app.extension.ReactiveExtensionClient;
 import run.halo.app.plugin.ApiVersion;
@@ -75,13 +77,13 @@ public class ImportController {
         //保存文件
         //保存文件
 
-        return filePartFlux.flatMap(filePart -> {
+        return filePartFlux.publishOn(Schedulers.boundedElastic()).flatMap(filePart -> {
             File file =
                 new File(FileUtil.getDocFile(FileUtil.DirPath.IMPORT).toFile().getAbsolutePath()
                     + "/" + filePart.filename());
             // importService.importPost(file,token, session);
 
-            filePart.transferTo(file);
+            filePart.transferTo(file).block();
             return importService.runTask(file);
         });
 
