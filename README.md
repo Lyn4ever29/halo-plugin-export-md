@@ -35,6 +35,7 @@ Halo 2.0 插件——文章导入导出插件
 - v1.1.0 
   - 支持导入Markdown文件
   - 导出的Mardkdown文件支持属性，属性示例如下：
+  
   ```yaml
   ---
   title: 试试Nacos作注册中心和配置中心，爱不释手的感觉
@@ -43,12 +44,12 @@ Halo 2.0 插件——文章导入导出插件
   excerpt: 在使用SpringCloud做分布式微服务架构时，注册中心是必不可少的一个组件。
   permalink: /2022/166359134426
   categories:
-    -java
-    -springcloud
+    - java
+    - springcloud
   tags:
-    -springcloud
-    -nacos
-    -注册中心
+    - springcloud
+    - nacos
+    - 注册中心
   ---
   ```
 - v1.0.0
