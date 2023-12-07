@@ -7,8 +7,11 @@ Halo 2.0 插件——文章导入导出插件
 
 ## 预览
 - 文章列表导出功能
+
 ![https://github.com/Lyn4ever29/halo-plugin-export-md/assets/25952589/dd247afe-76f0-402f-9f3c-68b265d7b8ab](https://github.com/Lyn4ever29/halo-plugin-export-md/assets/25952589/dd247afe-76f0-402f-9f3c-68b265d7b8ab)
+
 - 导出列表
+
 ![导出列表](https://github.com/Lyn4ever29/halo-plugin-export-md/assets/25952589/2404ae3c-582b-4f5e-b9b6-96f7b029af69)
 
 
@@ -18,6 +21,7 @@ Halo 2.0 插件——文章导入导出插件
 
 ## 说明
 - 与插件[ToolBench](https://www.halo.run/store/apps/app-SsYlH)一起使用时存在不兼容的问题，导致文章无法查看。
+- 如果您有任何问题或者好的建议，请提issue给我。
 
 
 ## 更新日志
