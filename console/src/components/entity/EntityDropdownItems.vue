@@ -57,6 +57,7 @@ function action(dropdownItem: OperationItem<T>) {
         </template>
       </VDropdown>
       <component
+        v-permission="['plugin:export2doc:manage']"
         :is="dropdownItem.component"
         v-else
         v-bind="dropdownItem.props"

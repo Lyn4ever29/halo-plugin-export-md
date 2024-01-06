@@ -51,7 +51,7 @@ const handleCreate = () => {
       <IconArrowUpDownLine  class="mr-2 self-center"/>
     </template>
     <template #actions>
-      <VSpace>
+      <VSpace v-permission="['plugin:export2doc:manage']">
 
         <VButton type="default" size="sm" :route="{name:'export2doc',query:{tab:'import4doc'}}">
           <template #icon>
