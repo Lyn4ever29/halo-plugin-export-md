@@ -48,3 +48,7 @@ build {
     // build frontend before build
     tasks.getByName('compileJava').dependsOn('buildFrontend')
 }
+
+halo {
+    version = "2.11"
+}

@@ -2,7 +2,6 @@
 import type { OperationItem } from "@halo-dev/console-shared";
 import { VDropdown } from "@halo-dev/components";
 
-
 const props = withDefaults(
   defineProps<{
     dropdownItems: OperationItem<T>[];
@@ -23,11 +22,7 @@ function action(dropdownItem: OperationItem<T>) {
 
 <template>
   <template v-for="(dropdownItem, index) in dropdownItems">
-    <template
-      v-if="
-        !dropdownItem.hidden
-      "
-    >
+    <template v-if="!dropdownItem.hidden">
       <VDropdown
         v-if="dropdownItem.children?.length"
         :key="`dropdown-children-items-${index}`"
@@ -44,9 +39,7 @@ function action(dropdownItem: OperationItem<T>) {
           <template v-for="(childItem, childIndex) in dropdownItem.children">
             <component
               :is="childItem.component"
-              v-if="
-                !childItem.hidden
-              "
+              v-if="!childItem.hidden"
               v-bind="childItem.props"
               :key="`dropdown-child-item-${childIndex}`"
               @click="action(childItem)"
@@ -57,11 +50,11 @@ function action(dropdownItem: OperationItem<T>) {
         </template>
       </VDropdown>
       <component
-        v-permission="['plugin:export2doc:manage']"
         :is="dropdownItem.component"
         v-else
         v-bind="dropdownItem.props"
         :key="`dropdown-item-${index}`"
+        v-permission="['plugin:export2doc:manage']"
         @click="action(dropdownItem)"
       >
         {{ dropdownItem.label }}
