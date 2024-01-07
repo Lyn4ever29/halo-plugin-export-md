@@ -25,6 +25,12 @@ Halo 2.0 插件——文章导入导出插件
 
 
 ## 更新日志
+- v1.2.3 优化导入导出的 UI。（来自[@ruibaby](https://github.com/ruibaby)的PR）
+  - 支持显示空状态，引导用户导出文章。
+  - 支持导出/删除记录之后自动更新列表数据，不再需要手动刷新页面。
+  - 使用 Halo 在全局注册的 Uppy 组件，减少构建产物体积。（已同步修改 plugin.yaml 的 requires 为 2.11）
+  - 使用 Halo 官方新提供的 @halo-dev/ui-plugin-bundler-kit 用于构建插件。
+  - 移除部分无用样式和注释。
 - v1.2.2
   - 导出文章时，添加封面图字段
   - 添加权限控制，感谢[@chengzhongxue](https://github.com/chengzhongxue)的PR
