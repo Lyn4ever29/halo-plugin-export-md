@@ -18,6 +18,7 @@ export default definePlugin({
                 meta: {
                     title: "文章导入导出",
                     searchable: true,
+                    permissions: ["plugin:export2doc:view"],
                     menu: {
                         name: "文章导入导出",
                         group: "tool",

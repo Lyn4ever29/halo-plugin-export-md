@@ -1,0 +1,34 @@
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-export2doc-view
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "文章导入导出"
+    rbac.authorization.halo.run/display-name: "文章导入导出查看"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:export2doc:view"]
+rules:
+  - apiGroups: [ "cn.lyn4ever.export2doc" ]
+    resources: [ "exportLogs"]
+    verbs: [ "list" ]
+---
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-export2doc-manage
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "文章导入导出"
+    rbac.authorization.halo.run/display-name: "文章导入导出管理"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:export2doc:manage"]
+    rbac.authorization.halo.run/dependencies: |
+      ["role-template-export2doc-view"]
+rules:
+  - apiGroups: [ "api.plugin.halo.run" ]
+    resources: [ "plugins/doImport/**","plugins/doExport/**"]
+    resourceNames: [ "export2doc" ]
+    verbs: [ "create", "get"]

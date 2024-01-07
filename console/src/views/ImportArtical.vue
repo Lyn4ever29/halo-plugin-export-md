@@ -24,7 +24,7 @@ const showUploader = ref(false)
       </ul>
     </template>
     <template v-if="!showUploader" #actions>
-      <VButton @click="showUploader = true">
+      <VButton v-permission="['plugin:export2doc:manage']" @click="showUploader = true">
         开始导入
       </VButton>
     </template>
