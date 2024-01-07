@@ -10,6 +10,5 @@ declare module 'vue' {
     EntityDropdownItems: typeof import('./src/components/entity/EntityDropdownItems.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    UppyUpload: typeof import('./src/components/upload/UppyUpload.vue')['default']
   }
 }
