@@ -67,6 +67,7 @@ public class ExportServiceImpl implements ExportService {
         String categories = exportLogSchema.getCategory();
         String tag = exportLogSchema.getTag();
 
+        // 构造查询条件
         Predicate<Post> paramPredicate = post -> true;
 //        if (StringUtils.isNotBlank(categories)) {
 //            paramPredicate.and(post -> contains(Set.copyOf(List.of(categories.split(","))), post.getSpec().getCategories()));
@@ -195,6 +196,7 @@ public class ExportServiceImpl implements ExportService {
                 writer.write(String.format("date: %s\n", formatDate));
 
                 writer.write(String.format("auther: %s\n", postSpec.getOwner()));
+                writer.write(String.format("cover: %s\n", postSpec.getCover()));
                 //摘录 不允许存在:和\n
                 writer.write(String.format("excerpt: %s\n", postStatus.getExcerpt().replaceAll("\n", "").replaceAll(":","")));
                 //永久链接
