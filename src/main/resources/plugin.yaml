@@ -5,7 +5,7 @@ metadata:
   name: export2doc
 spec:
   enabled: true
-  requires: ">=2.11.0"
+  requires: ">=2.12.0"
   author:
     name: Lyn4ever
     website: https://jhacker.cn

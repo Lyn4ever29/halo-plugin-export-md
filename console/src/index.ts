@@ -10,14 +10,15 @@ export default definePlugin({
     components: {},
     routes: [
         {
-            parentName: "Root",
+            parentName: "ToolsRoot",
             route: {
-                path: "/export2doc",
+                path: "export2doc",
                 name: "export2doc",
                 component: HomeView,
                 meta: {
                     title: "文章导入导出",
                     searchable: true,
+                    description: "导出文章为 Markdown、HTML 文件，同时支持导入 Markdown 文件",
                     permissions: ["plugin:export2doc:view"],
                     menu: {
                         name: "文章导入导出",
