@@ -7,11 +7,13 @@ spec:
   enabled: true
   requires: ">=2.12.0"
   author:
-    name: Lyn4ever
+    name: Lyn4ever29
     website: https://jhacker.cn
   logo: https://img.jhacker.cn/img/export2doc.png
   # 'homepage' usually links to the GitHub repository of the plugin
   homepage: https://jhacker.cn/2023/halo-plugin-export2doc
+  repo: https://github.com/halo-dev/plugin-starter
+  issues: https://github.com/halo-dev/plugin-starter/issues
   # 'displayName' explains what the plugin does in only a few words
   displayName: "文章导入导出"
   description: "导出文章为markdown、HTML文件，同时支持导入markdown文件"
