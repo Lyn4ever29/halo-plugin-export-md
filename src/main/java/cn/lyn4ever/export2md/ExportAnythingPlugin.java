@@ -3,7 +3,7 @@ package cn.lyn4ever.export2md;
 import cn.lyn4ever.export2md.schema.ExportLogSchema;
 import cn.lyn4ever.export2md.schema.ImportLogSchema;
 import org.pf4j.PluginManager;
-import org.pf4j.PluginWrapper;
+import run.halo.app.plugin.PluginContext;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.SchemeManager;
 import run.halo.app.plugin.BasePlugin;
@@ -16,9 +16,9 @@ import run.halo.app.plugin.BasePlugin;
 @Component
 public class ExportAnythingPlugin extends BasePlugin {
     private final SchemeManager schemeManager;
-
-    public ExportAnythingPlugin(PluginWrapper wrapper, SchemeManager schemeManager) {
-        super(wrapper);
+    
+    public ExportAnythingPlugin(PluginContext context, SchemeManager schemeManager) {
+        super(context);
         this.schemeManager = schemeManager;
     }
 
