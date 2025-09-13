@@ -1,13 +1,12 @@
 plugins {
     id 'java'
     id "com.github.node-gradle.node" version "5.0.0"
-    id "io.freefair.lombok" version "8.0.1"
-    id "run.halo.plugin.devtools" version "0.0.9"
+    id "io.freefair.lombok" version "8.4"
+    id "run.halo.plugin.devtools" version "0.6.1"
 }
 
-
 group 'cn.lyn4ever.export2doc'
-sourceCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenCentral()
@@ -17,11 +16,10 @@ repositories {
 }
 
 dependencies {
-    implementation platform('run.halo.tools.platform:plugin:2.11.0-SNAPSHOT')
+    implementation platform('run.halo.tools.platform:plugin:2.21.0')
     compileOnly 'run.halo.app:api'
 
     testImplementation 'run.halo.app:api'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
 
     implementation 'cn.hutool:hutool-all:5.8.18'
@@ -31,9 +29,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile).configureEach {
     //  设置编码为utf8
     systemProperty("file.encoding", "UTF-8")
 }
@@ -42,25 +37,18 @@ tasks.withType(JavaCompile) {
 }
 
 node {
-    nodeProjectDir = file("${project.projectDir}/ui")
+    nodeProjectDir = file("${project.projectDir}/console")
 }
 
-tasks.register('buildFrontend', PnpmTask) {
+task buildFrontend(type: PnpmTask) {
     args = ['build']
-    dependsOn('installDepsForUI')
-}
-
-tasks.register('installDepsForUI', PnpmTask) {
-    args = ['install']
 }
 
 build {
     // build frontend before build
-    tasks.named('compileJava').configure {
-        dependsOn('buildFrontend')
-    }
+    tasks.getByName('compileJava').dependsOn('buildFrontend')
 }
 
 halo {
-    version = '2.11'
+    version = "2.21"
 }
