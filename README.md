@@ -25,14 +25,11 @@ Halo 2.0 插件——文章导入导出插件
 
 
 ## 更新日志
-- v1.2.6
+- v1.2.5
   - 适配Halo2.21版本，感谢[Zhangfen21082](https://github.com/Zhangfen21082)网友的修复
   - 修改markdown4j库为[flexmark-java](https://github.com/vsch/flexmark-java)
   - 修改插件编写方式为最新版本，将console目录同步修改为ui目录
 
-
-- v1.2.5
-  - 修复导出文章时，出现的错误问题
 
 - v1.2.4 
   - 将导入导出页面的入口放置在工具菜单项下作为子菜单项（2.12版本的特性）。
