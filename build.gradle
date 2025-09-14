@@ -1,54 +1,58 @@
 plugins {
     id 'java'
-    id "com.github.node-gradle.node" version "5.0.0"
-    id "io.freefair.lombok" version "8.4"
+    id "io.freefair.lombok" version "8.13"
     id "run.halo.plugin.devtools" version "0.6.1"
 }
 
 group 'cn.lyn4ever.export2doc'
-sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
-    mavenCentral()
-    maven { url 'https://s01.oss.sonatype.org/content/repositories/releases' }
-    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://repo.spring.io/milestone' }
+    maven {
+        url 'https://maven.aliyun.com/repository/public/'
+    }
+    mavenLocal()
 }
 
 dependencies {
     implementation platform('run.halo.tools.platform:plugin:2.21.0')
     compileOnly 'run.halo.app:api'
 
-    testImplementation 'run.halo.app:api'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
-
     implementation 'cn.hutool:hutool-all:5.8.18'
-    implementation 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
+//    implementation 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.0'
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
 
+    testImplementation 'run.halo.app:api'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
     useJUnitPlatform()
-    //  设置编码为utf8
-    systemProperty("file.encoding", "UTF-8")
 }
-tasks.withType(JavaCompile) {
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
+    options.release = 21
 }
 
-node {
-    nodeProjectDir = file("${project.projectDir}/console")
+tasks.register('processUiResources', Copy) {
+    from project(':ui').layout.buildDirectory.dir('dist')
+    into layout.buildDirectory.dir('resources/main/console')
+    dependsOn project(':ui').tasks.named('assemble')
+    shouldRunAfter tasks.named('processResources')
 }
 
-task buildFrontend(type: PnpmTask) {
-    args = ['build']
-}
-
-build {
-    // build frontend before build
-    tasks.getByName('compileJava').dependsOn('buildFrontend')
+tasks.named('classes') {
+    dependsOn tasks.named('processUiResources')
 }
 
 halo {
-    version = "2.21"
+    version = '2.21'
 }
+

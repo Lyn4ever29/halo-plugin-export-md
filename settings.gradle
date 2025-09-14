@@ -4,4 +4,4 @@ pluginManagement {
     }
 }
 rootProject.name = 'halo-plugin-export2doc'
-
+include 'ui'

@@ -148,7 +148,7 @@ public class ExportServiceImpl implements ExportService {
      *
      * @param post
      * @param content
-     * @param name
+     * @param path
      */
     private String writeContent(Post post, ContentWrapper content, String path) {
         Path docFile = FileUtil.getDocFile(FileUtil.DirPath.EXPORT);

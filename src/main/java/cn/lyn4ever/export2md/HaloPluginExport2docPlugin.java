@@ -14,10 +14,10 @@ import run.halo.app.plugin.BasePlugin;
  * @date 2023/11/1
  */
 @Component
-public class ExportAnythingPlugin extends BasePlugin {
+public class HaloPluginExport2docPlugin extends BasePlugin {
     private final SchemeManager schemeManager;
     
-    public ExportAnythingPlugin(PluginContext context, SchemeManager schemeManager) {
+    public HaloPluginExport2docPlugin(PluginContext context, SchemeManager schemeManager) {
         super(context);
         this.schemeManager = schemeManager;
     }

@@ -17,9 +17,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.StringJoiner;
+import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.markdown4j.Markdown4jProcessor;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -243,10 +243,12 @@ public class PostServiceImpl extends AbstractContentService implements PostServi
 
         try {
             return new PostRequest(post, new Content(sj.toString(),
-                new Markdown4jProcessor().process(sj.toString()),
+            FlexmarkHtmlConverter.builder()
+                .build()
+                .convert(sj.toString()),
                 "markdown")
             );
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

@@ -108,7 +108,7 @@ defineExpose({
   <Transition v-else appear name="fade">
     <ul class="box-border h-full w-full divide-y divide-gray-100" role="list">
       <li v-for="item in data.items" :key="item.metadata.name">
-        <ExportItem :export-log="item" />
+        <ExportItem :export-log="item" :show-operations="true" />
       </li>
     </ul>
   </Transition>

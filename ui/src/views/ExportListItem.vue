@@ -11,6 +11,7 @@ import {
   VStatusDot,
 } from "@halo-dev/components";
 import type { ExportLog } from "@/domain";
+// Update the import path to the correct location of EntityDropdownItems.vue
 import EntityDropdownItems from "../components/entity/EntityDropdownItems.vue";
 import { useQueryClient } from "@tanstack/vue-query";
 
@@ -67,9 +68,9 @@ const statusList = ref({
   c: "成功",
 });
 const statusTag = ref({
-  a: "error",
-  b: "warning",
-  c: "success",
+  a: "error" as const,
+  b: "warning" as const,
+  c: "success" as const,
 });
 
 const clickDel = () => {

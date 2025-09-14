@@ -9,7 +9,7 @@ spec:
   author:
     name: Lyn4ever29
     website: https://jhacker.cn
-  logo: https://img.jhacker.cn/img/export2doc.png
+  logo: logo.png
   # 'homepage' usually links to the GitHub repository of the plugin
   homepage: https://jhacker.cn/2023/halo-plugin-export2doc
   repo: https://github.com/halo-dev/plugin-starter

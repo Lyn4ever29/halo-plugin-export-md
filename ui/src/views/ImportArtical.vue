@@ -18,15 +18,10 @@ const showUploader = ref(false);
             2.导入后的文章将处于
             <span style="color: red">待发布状态</span>，请核对后自行发布
           </li>
-          <li>3.默认的Markdown解析器是Markdown4j，参考资料如下：</li>
+          <li>3.默认的Markdown解析器是flexmark-java，参考资料如下：</li>
           <li>
-            <a href="https://code.google.com/archive/p/markdown4j/"
-              >https://code.google.com/archive/p/markdown4j/</a
-            >
-          </li>
-          <li>
-            <a href="https://github.com/rjeschke/txtmark"
-              >https://github.com/rjeschke/txtmark</a
+            <a href="https://github.com/vsch/flexmark-java"
+              >https://github.com/vsch/flexmark-java</a
             >
           </li>
         </ul>
